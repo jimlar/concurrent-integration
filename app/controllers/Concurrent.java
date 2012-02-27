@@ -13,11 +13,11 @@ public class Concurrent extends Controller {
     public static Results results = new Results();
     public static Schedule schedule = new Schedule();
 
-    public static Executor executor = Executors.newFixedThreadPool(5);
 
     public static void index() throws InterruptedException, ExecutionException {
         long start = System.currentTimeMillis();
 
+        Executor executor = Executors.newFixedThreadPool(3);
         ExecutorCompletionService<Result> cs = new ExecutorCompletionService<Result>(executor);
 
         submitServiceCall(cs, "n", news);
@@ -25,7 +25,7 @@ public class Concurrent extends Controller {
         submitServiceCall(cs, "s", schedule);
 
         for (int i = 0; i < 3; i++) {
-            Future<Result> future = cs.poll(2, TimeUnit.SECONDS);
+            Future<Result> future = cs.take();
             Result result = future.get();
             renderArgs.put(result.name, result.value);
         }
