@@ -17,7 +17,7 @@ public class Concurrent extends Controller {
     public static void index() throws InterruptedException, ExecutionException {
         long start = System.currentTimeMillis();
 
-        Executor executor = Executors.newFixedThreadPool(3);
+        ExecutorService executor = Executors.newFixedThreadPool(3);
         ExecutorCompletionService<Result> cs = new ExecutorCompletionService<Result>(executor);
 
         submitServiceCall(cs, "n", news);
@@ -30,6 +30,7 @@ public class Concurrent extends Controller {
             renderArgs.put(result.name, result.value);
         }
 
+        executor.shutdown();
         long time = System.currentTimeMillis() - start;
         renderTemplate("index.html", time);
     }
