@@ -1,6 +1,6 @@
 package integrations;
 
-public abstract class MockIntegration {
+public abstract class Integration {
     
     public String requestData() {
         try {

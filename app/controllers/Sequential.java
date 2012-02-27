@@ -10,7 +10,7 @@ import java.util.*;
 
 import models.*;
 
-public class Application extends Controller {
+public class Sequential extends Controller {
     public static News news = new News();
     public static Results results = new Results();
     public static Schedule schedule = new Schedule();
@@ -21,6 +21,6 @@ public class Application extends Controller {
         String r = results.requestData();
         String s = schedule.requestData();
         long time = System.currentTimeMillis() - start;
-        render(n, r, s, time);
+        renderTemplate("index.html", n, r, s, time);
     }
 }
