@@ -4,11 +4,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import controllers.Result;
-import play.Logger;
-import play.mvc.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Master extends UntypedActor {
@@ -17,10 +13,10 @@ public class Master extends UntypedActor {
     private final ActorRef scheduleWorker;
 
     private int numMessages = 0;
-    private Map renderArgs;
+    private Map results;
 
-    public Master(Map renderArgs) {
-        this.renderArgs = renderArgs;
+    public Master(Map results) {
+        this.results = results;
         newsWorker = this.getContext().actorOf(new Props(NewsWorker.class), "newsWorker");
         resultsWorker = this.getContext().actorOf(new Props(ResultsWorker.class), "resultsWorker");
         scheduleWorker = this.getContext().actorOf(new Props(ScheduleWorker.class), "scheduleWorker");
@@ -29,7 +25,7 @@ public class Master extends UntypedActor {
     public void onReceive(Object message) {
         if (message instanceof Result) {
             Result result = (Result) message;
-            renderArgs.put(result.name, result.value);
+            results.put(result.name, result.value);
             numMessages++;
             if (numMessages == 3) {
                 getContext().system().shutdown();
